@@ -1,0 +1,12 @@
+{
+  "location": "Kuala Lumpur, Kuala Lumpur, Malaysia",
+  "localTime": "Local Time: 2024-10-31 23:34",
+  "temperature": "Temperature: 27.2°C",
+  "feelsLike": "Feels Like: 31.3°C",
+  "forecast": "Forecast: 33.1°C / 24.2°C",
+  "sunrise": "Sunrise: 06:57 AM",
+  "sunset": "Sunset: 06:57 PM",
+  "windSpeed": "Wind Speed: 4.3 kph",
+  "humidity": "Humidity: 89%",
+  "condition": "Condition: Partly cloudy"
+}

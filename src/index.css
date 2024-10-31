@@ -1,0 +1,83 @@
+/* styles.css */
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #003366;
+  background-color: #87CEEB; 
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; 
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 97%; 
+  position: relative; 
+  z-index: 1000;
+}
+
+.logo h1 {
+  font-size: 1.8rem; 
+  color: #003366;
+  letter-spacing: 1.5px;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex; 
+  align-items: center; 
+}
+
+.nav-links a {
+  color: #003366;
+  font-size: 1rem; 
+  text-decoration: none;
+  padding: 8px 15px; 
+  background-color: #FFA500;
+  border-radius: 20px;
+  transition: background 0.3s;
+  margin-left: 10px; 
+  display: inline-block; 
+}
+
+.nav-links a:hover {
+  background-color: #FF8C00;
+}
+
+main {
+  padding: 20px; 
+  text-align: center;
+  color: #ffffff;
+  flex: 1; 
+}
+
+/* Footer */
+footer {
+  padding: 20px;
+  background-color: #003366;
+  color: #f1f1f1;
+  text-align: center;
+  font-size: 0.9rem;
+  position: relative; 
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a {
+  color: #FFA500;
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: #FF8C00;
+}

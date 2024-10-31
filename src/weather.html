@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Information</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="weather.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Weather Info</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+        </div>
+    </header>
+
+    <main>
+        <h1>Get Weather Information</h1>
+        <form class="weather-form">
+            <input type="text" id="locationInput" placeholder="Enter city or country" required>
+            <button type="submit">Get Weather</button>
+        </form>
+
+        <div class="info-container">
+            <div class="weather-info" id="weatherInfo" style="display: none;">
+                <h3 id="locationName"></h3>
+                <p id="localTime"></p>
+                <img id="weatherIcon" alt="Weather Icon">
+                <p id="temperature"></p>
+                <p id="feelsLike"></p>
+                <p id="forecast"></p>
+                <p id="sunrise"></p>
+                <p id="sunset"></p>
+                <p id="windSpeed"></p>
+                <p id="humidity"></p>
+                <p id="condition"></p>
+                <button id="saveWeatherButton">Save Weather Information</button>
+            </div>
+
+            <div class="clothing-advice" id="clothingAdvice" style="display: none;">
+                <h4>Clothing Recommendation</h4>
+                <p id="clothingText"></p>
+                <img id="clothingIcon" src="" alt="Clothing Icon">
+            </div>
+
+            <div class="itinerary-section" id="itinerarySection">
+                <h4>Itinerary Today</h4>
+                <div id="itineraryList"></div>
+
+                <div id="suggestedActivity"></div> 
+
+                <div class="input-container">
+                    <input type="text" id="activityInput" placeholder="Add new activity" />
+                    <input type="text" id="timeInput" placeholder="Add time for activity (e.g., 14:00)" />
+                    <button id="addActivityButton">Add Activity</button>
+                </div>
+            </div>
+        </div>
+
+        <h2>Read Saved Weather Information</h2>
+        <input type="file" id="fileInput" accept=".txt">
+        <button id="readFileButton">Read Saved Weather Info</button>
+        <div id="savedWeatherInfo" style="display: none;"></div>
+    </main>
+
+    <footer>
+        <p>Contact us at manqil@travelleradvisories.com | Follow us on <a href="https://www.instagram.com/">Instagram</a></p>
+    </footer>
+
+    <script>
+        const apiKey = '32804b24a847407391c53709241010'; 
+        const form = document.querySelector('.weather-form');
+        const weatherInfo = document.getElementById('weatherInfo');
+        const locationName = document.getElementById('locationName');
+        const localTime = document.getElementById('localTime');
+        const temperature = document.getElementById('temperature');
+        const feelsLike = document.getElementById('feelsLike');
+        const forecast = document.getElementById('forecast');
+        const sunrise = document.getElementById('sunrise');
+        const sunset = document.getElementById('sunset');
+        const windSpeed = document.getElementById('windSpeed');
+        const humidity = document.getElementById('humidity');
+        const condition = document.getElementById('condition');
+        const weatherIcon = document.getElementById('weatherIcon');
+        const clothingText = document.getElementById('clothingText');
+        const clothingIcon = document.getElementById('clothingIcon');
+
+        const itineraryList = document.getElementById('itineraryList');
+        const activityInput = document.getElementById('activityInput');
+        const timeInput = document.getElementById('timeInput');
+        const addActivityButton = document.getElementById('addActivityButton');
+        const suggestedActivityDiv = document.getElementById('suggestedActivity');
+        const readFileButton = document.getElementById('readFileButton');
+        const savedWeatherInfo = document.getElementById('savedWeatherInfo');
+
+        const weatherActivities = {
+            "rain": "Watch a movie, Play Indoor Games",
+            "snow": "Build a snowman or stay indoors",
+            "sunny": "Go to the park, Aquarium and Beach",
+            "cloudy": "Visit a museum, Go to Swimming",
+            "storm": "Stay indoors and enjoy a cozy day",
+            "default": "No specific recommendations, feel free to enjoy your day!"
+        };
+
+        // Load saved activities from Local Storage
+        loadActivities();
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const location = document.getElementById('locationInput').value;
+            const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${location}&days=1`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+
+                const data = await response.json();
+                displayWeatherInfo(data);
+            } catch (error) {
+                alert("Could not fetch weather data. Please try again.");
+                console.error("Error fetching weather data:", error);
+            }
+        });
+
+        function displayWeatherInfo(data) {
+            locationName.textContent = `${data.location.name}, ${data.location.region}, ${data.location.country}`;
+            localTime.textContent = `Local Time: ${data.location.localtime}`;
+            temperature.textContent = `Temperature: ${data.current.temp_c}°C`;
+            feelsLike.textContent = `Feels Like: ${data.current.feelslike_c}°C`;
+            forecast.textContent = `Forecast: ${data.forecast.forecastday[0].day.maxtemp_c}°C / ${data.forecast.forecastday[0].day.mintemp_c}°C`;
+            sunrise.textContent = `Sunrise: ${data.forecast.forecastday[0].astro.sunrise}`;
+            sunset.textContent = `Sunset: ${data.forecast.forecastday[0].astro.sunset}`;
+            windSpeed.textContent = `Wind Speed: ${data.current.wind_kph} kph`;
+            humidity.textContent = `Humidity: ${data.current.humidity}%`;
+            condition.textContent = `Condition: ${data.current.condition.text}`;
+            weatherIcon.src = `https:${data.current.condition.icon}`;
+            weatherIcon.alt = data.current.condition.text;
+
+            displayClothingAdvice(data.current.condition.text);
+            updateSuggestedActivity(data.current.condition.text);
+
+            weatherInfo.style.display = 'block';
+            document.getElementById('clothingAdvice').style.display = 'block';
+            document.getElementById('itinerarySection').style.display = 'block';
+        }
+
+        function displayClothingAdvice(weatherCondition) {
+            if (weatherCondition.toLowerCase().includes("rain")) {
+                clothingText.textContent = "Bring a raincoat and an umbrella.";
+                clothingIcon.src = "raincoat.jpg"; 
+            } else if (weatherCondition.toLowerCase().includes("snow")) {
+                clothingText.textContent = "Wear a warm coat, scarf, and gloves.";
+                clothingIcon.src = "winter.jpg"; 
+            } else if (weatherCondition.toLowerCase().includes("sunny")) {
+                clothingText.textContent = "Light clothing and sunglasses are recommended.";
+                clothingIcon.src = "sunny.jpg"; 
+            } else {
+                clothingText.textContent = "Dress comfortably according to the temperature.";
+                clothingIcon.src = "casual.jpg"; 
+            }
+        }
+
+        // Suggestion
+        function updateSuggestedActivity(weatherCondition) {
+            let activitySuggestion = weatherActivities.default; 
+
+            // Check for specific weather conditions
+            if (weatherCondition.toLowerCase().includes("rain")) {
+                activitySuggestion = weatherActivities.rain;
+            } else if (weatherCondition.toLowerCase().includes("snow")) {
+                activitySuggestion = weatherActivities.snow;
+            } else if (weatherCondition.toLowerCase().includes("sunny")) {
+                activitySuggestion = weatherActivities.sunny;
+            } else if (weatherCondition.toLowerCase().includes("cloudy")) {
+                activitySuggestion = weatherActivities.cloudy;
+            } else if (weatherCondition.toLowerCase().includes("storm")) {
+                activitySuggestion = weatherActivities.storm;
+            }
+
+            // Update the suggested activity section
+            suggestedActivityDiv.textContent = `Suggested Activity: ${activitySuggestion}`;
+        }
+
+        // Load activities from Local Storage
+        function loadActivities() {
+            const savedActivities = JSON.parse(localStorage.getItem('activities')) || [];
+            savedActivities.forEach(activity => {
+                const activityDiv = document.createElement('div');
+                activityDiv.className = 'itinerary-item';
+                activityDiv.innerHTML = ` 
+                    <span class="activity-time">${activity.time}</span>
+                    <span class="activity-name">${activity.name}</span>
+                    <button class="edit-button" onclick="editActivity(this)">Edit</button>
+                    <button class="delete-button" onclick="deleteActivity(this)">Delete</button>
+                `;
+                itineraryList.appendChild(activityDiv);
+            });
+        }
+
+        addActivityButton.addEventListener('click', () => {
+            const activityName = activityInput.value;
+            const activityTime = timeInput.value;
+
+            if (activityName && activityTime) {
+                const activity = { name: activityName, time: activityTime };
+                const savedActivities = JSON.parse(localStorage.getItem('activities')) || [];
+                savedActivities.push(activity);
+                localStorage.setItem('activities', JSON.stringify(savedActivities));
+
+                loadActivities(); 
+                activityInput.value = '';
+                timeInput.value = '';
+            } else {
+                alert("Please enter both activity and time.");
+            }
+        });
+
+        function editActivity(button) {
+            const activityDiv = button.parentElement;
+            const activityName = activityDiv.querySelector('.activity-name');
+            const activityTime = activityDiv.querySelector('.activity-time');
+
+            activityInput.value = activityName.textContent;
+            timeInput.value = activityTime.textContent;
+
+            // Remove the activity
+            deleteActivity(button);
+        }
+
+        function deleteActivity(button) {
+            const activityDiv = button.parentElement;
+            const activityName = activityDiv.querySelector('.activity-name').textContent;
+            const activityTime = activityDiv.querySelector('.activity-time').textContent;
+
+            const savedActivities = JSON.parse(localStorage.getItem('activities')) || [];
+            const updatedActivities = savedActivities.filter(activity => activity.name !== activityName || activity.time !== activityTime);
+            localStorage.setItem('activities', JSON.stringify(updatedActivities));
+
+            activityDiv.remove();
+        }
+
+        const saveWeatherButton = document.getElementById('saveWeatherButton');
+        saveWeatherButton.addEventListener('click', () => {
+            const weatherData = {
+                location: locationName.textContent,
+                localTime: localTime.textContent,
+                temperature: temperature.textContent,
+                feelsLike: feelsLike.textContent,
+                forecast: forecast.textContent,
+                sunrise: sunrise.textContent,
+                sunset: sunset.textContent,
+                windSpeed: windSpeed.textContent,
+                humidity: humidity.textContent,
+                condition: condition.textContent
+            };
+
+            const blob = new Blob([JSON.stringify(weatherData, null, 2)], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'weather_info.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        readFileButton.addEventListener('click', () => {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const content = event.target.result;
+                    displaySavedWeatherInfo(content);
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Please select a file to read.');
+            }
+        });
+
+        function displaySavedWeatherInfo(content) {
+            const weatherData = JSON.parse(content);
+            savedWeatherInfo.innerHTML = `
+                <h3>Saved Weather Information:</h3>
+                <p>Location: ${weatherData.location}</p>
+                <p>Local Time: ${weatherData.localTime}</p>
+                <p>Temperature: ${weatherData.temperature}</p>
+                <p>Feels Like: ${weatherData.feelsLike}</p>
+                <p>Forecast: ${weatherData.forecast}</p>
+                <p>Sunrise: ${weatherData.sunrise}</p>
+                <p>Sunset: ${weatherData.sunset}</p>
+                <p>Wind Speed: ${weatherData.windSpeed}</p>
+                <p>Humidity: ${weatherData.humidity}</p>
+                <p>Condition: ${weatherData.condition}</p>
+            `;
+            savedWeatherInfo.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

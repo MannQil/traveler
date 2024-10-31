@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traveller Advisories</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #003366;
+            background-color: #87CEEB;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+    
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 97%;
+            top: 0;
+            z-index: 1000;
+        }
+    
+        .logo h1 {
+            font-size: 2rem;
+            color: #003366;
+            letter-spacing: 1.5px;
+            margin: 0;
+        }
+    
+        .nav-links a {
+            color: #003366;
+            font-size: 1.1rem;
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #FFA500;
+            border-radius: 20px;
+            transition: background 0.3s;
+        }
+    
+        .nav-links a:hover {
+            background-color: #FF8C00;
+        }
+
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 80px;
+            color: #fff;
+            background-image: url('cloud.jpg'); /* Path to your background image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    
+        .hero-section h2 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    
+        .hero-section p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #050506;
+        }
+    
+        .hero-section .explore-btn {
+            padding: 15px 40px;
+            background-color: #FFA500;
+            color: #003366;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 165, 0, 0.4);
+        }
+    
+        .hero-section .explore-btn:hover {
+            background-color: #FF8C00;
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(255, 140, 0, 0.5);
+        }
+    
+        footer {
+            padding: 20px;
+            background-color: #003366;
+            color: #f1f1f1;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+    
+        footer p {
+            margin: 0;
+            
+        }
+    
+        footer a {
+            color: #FFA500;
+            text-decoration: none;
+        }
+    
+        footer a:hover {
+            color: #FF8C00;
+        }
+    </style>
+    
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>ManQil Traveller Advisories</h1>
+        </div>
+        <div class="nav-links">
+            <a href="weather.html">Get Weather Info</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="hero-section">
+            <h2>Welcome to ManQil Traveller Advisories</h2>
+            <p>Your trusted source for travel and weather insights.</p>
+            <a href="weather.html" class="explore-btn">Explore Weather</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>Contact us at manqil@travelleradvisories.com | Follow us on <a href="https://www.instagram.com/">Instagram</a></p>
+    </footer>
+</body>
+</html>
